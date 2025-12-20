@@ -1,0 +1,41 @@
+# =========================
+# Java / JavaFX
+# =========================
+*.class
+*.jar
+*.war
+*.ear
+
+# Compiled output
+/bin/
+/out/
+/target/
+
+# =========================
+# Eclipse IDE
+# =========================
+.classpath
+.project
+.settings/
+.buildpath
+
+# JavaFX build file (generated)
+build.fxbuild
+
+# =========================
+# Logs
+# =========================
+*.log
+
+# =========================
+# OS-specific
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# VS Code / IntelliJ (if ever used)
+# =========================
+.vscode/
+.idea/
+*.iml
