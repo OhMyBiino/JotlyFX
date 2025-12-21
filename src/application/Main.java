@@ -2,6 +2,10 @@ package application;
 	
 
 
+import java.util.ArrayList;
+import java.util.List;
+
+import application.model.Note;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -44,18 +48,18 @@ public class Main extends Application {
 		Image jotlyImage = new Image("Jotly_Logo.png");
 		stage.getIcons().add(jotlyImage);
 		
-		//Sample Text
-		Text text = new Text();
-		text.setText("Buddongg");
-		text.setX(450/2 - 5);
-		text.setY(450/2 - 3);
-//		text.setFill(Color.WHITE);
-//		text.setFont(Font.font("Sans-serif",50));
-		text.setStyle(
-				"-fx-fill:white;"
-				+ "-fx-font-weight:700;"
-				+ "-fx-font-size:20px;"
-				+ "-fx-font-family: 'Inter';");
+//		//Sample Text
+//		Text text = new Text();
+//		text.setText("Buddongg");
+//		text.setX(450/2 - 5);
+//		text.setY(450/2 - 3);
+////		text.setFill(Color.WHITE);
+////		text.setFont(Font.font("Sans-serif",50));
+//		text.setStyle(
+//				"-fx-fill:white;"
+//				+ "-fx-font-weight:700;"
+//				+ "-fx-font-size:20px;"
+//				+ "-fx-font-family: 'Inter';");
 		
 		Line NavLine = this.CreateLine();
 		
@@ -65,7 +69,39 @@ public class Main extends Application {
 		
 		Group SearchGroup = this.CreateSearchBox();
 		
-		root.getChildren().add(text);
+//		NoteRepository repo = new NoteRepository();
+//		List<Note> notes = repo.getAllNotes();
+		List<Note> notes = new ArrayList<Note>();
+		notes.add(new Note(1,
+	            "Meeting Notes Q3",
+	            "Key takeaways from the quarterly planning session and next action items.",
+	            "Edited 2 hours ago"
+	    ));
+		
+		 notes.add(new Note(
+		            2,
+		            "Project Phoenix Ideas",
+		            "Initial brainstorming for the new marketing campaign and target audience analysis.",
+		            "Edited yesterday"
+		));
+		 
+		 notes.add(new Note(
+		            3,
+		            "Grocery List",
+		            "Milk, Bread, Eggs, Cheese, Apples, Bananas, Coffee.",
+		            "Edited 3 days ago"
+		 ));
+
+		double startY = 70;
+
+		for (Note note : notes) {
+		    Group noteUI = CreateNoteItem(note, startY);
+		    root.getChildren().add(noteUI);
+		    startY += 80;
+		}
+
+		
+//		root.getChildren().add(text);
 		root.getChildren().add(NavLine);
 //		root.getChildren().add(SearchBarLine);
 		root.getChildren().add(addNoteBtn);
@@ -211,6 +247,37 @@ public class Main extends Application {
 	    searchGroup.getChildren().addAll(bg, searchIcon, searchField);
 	    return searchGroup;
 	}
+	
+	public Group CreateNoteItem(Note note, double y) {
+
+	    Group item = new Group();
+
+	    Rectangle bg = new Rectangle(200, y, 520, 70);
+	    bg.setArcWidth(12);
+	    bg.setArcHeight(12);
+	    bg.setFill(Color.rgb(16, 25, 34));
+
+	    Text title = new Text(note.getTitle());
+	    title.setX(215);
+	    title.setY(y + 28);
+	    title.setStyle(
+	        "-fx-fill: white;" +
+	        "-fx-font-size: 15px;" +
+	        "-fx-font-weight: 700;"
+	    );
+
+	    Text preview = new Text(note.getContent());
+	    preview.setX(215);
+	    preview.setY(y + 48);
+	    preview.setStyle(
+	        "-fx-fill: rgb(156,163,175);" +
+	        "-fx-font-size: 12px;"
+	    );
+
+	    item.getChildren().addAll(bg, title, preview);
+	    return item;
+	}
+
 
 }
 
