@@ -13,6 +13,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 
@@ -28,7 +29,7 @@ public class Main extends Application {
 		// TODO Auto-generated method stub
 		
 		Group root = new Group();
-		Scene scene = new Scene(root,750,500,Color.WHITE);
+		Scene scene = new Scene(root,750,500,Color.BLACK);
 		
 		//Set Jotly's Title
 		stage.setTitle("Jotly");
@@ -43,6 +44,8 @@ public class Main extends Application {
 		text.setText("Hello Buddy");
 		text.setX(450/2 - 5);
 		text.setY(450/2 - 3);
+		text.setFill(Color.WHITE);
+		text.setFont(Font.font("Sans-serif",50));
 		
 		
 		root.getChildren().add(text);
