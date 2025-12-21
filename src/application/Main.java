@@ -9,11 +9,13 @@ import javafx.stage.Stage;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
@@ -55,16 +57,29 @@ public class Main extends Application {
 				+ "-fx-font-size:20px;"
 				+ "-fx-font-family: 'Inter';");
 		
-		//Navigation and Main Content Division Line
-		Line NavLine = new Line();
-		NavLine.setStartX(180);
-		NavLine.setStartY(0);
-		NavLine.setEndX(180);
-		NavLine.setEndY(500);
-		NavLine.setStrokeWidth(0.5);
-		NavLine.setStroke(Color.rgb(156, 163, 175));
+		Line NavLine = this.CreateLine();
 		
+		Button addNoteBtn = this.CreateButton();
 		
+		Text notesTitle = this.CreateHeaderText();
+		
+		Group SearchGroup = this.CreateSearchBox();
+		
+		root.getChildren().add(text);
+		root.getChildren().add(NavLine);
+//		root.getChildren().add(SearchBarLine);
+		root.getChildren().add(addNoteBtn);
+		root.getChildren().add(notesTitle);
+		root.getChildren().add(SearchGroup);
+		
+		stage.setScene(scene);
+		stage.show();
+	}
+	
+	//Creates "Add New Note" Button
+	public Button CreateButton() 
+	{
+
 		//Add Note Button
 		// Add New Note Button
 		Button addNoteBtn = new Button("Add New Note");
@@ -112,28 +127,91 @@ public class Main extends Application {
 		    System.out.println("Add New Note clicked")
 		);
 		
-		// "Notes" Title (Sidebar Header)
-		Text notesTitle = new Text("Notes");
-
-		// Position
-		notesTitle.setX(25);
-		notesTitle.setY(40);
-
-		// Style using inline CSS
-		notesTitle.setStyle(
-		    "-fx-fill: white;" +
-		    "-fx-font-size: 22px;" +
-		    "-fx-font-weight: 700;" +
-		    "-fx-font-family: 'Inter', 'Sans-serif';"
-		);
-
-		
-		root.getChildren().add(text);
-		root.getChildren().add(NavLine);
-//		root.getChildren().add(SearchBarLine);
-		root.getChildren().add(addNoteBtn);
-		root.getChildren().add(notesTitle);
-		stage.setScene(scene);
-		stage.show();
+		return addNoteBtn;
 	}
+	
+	public Text CreateHeaderText() 
+	{
+		// "Notes" Title (Sidebar Header)
+				Text notesTitle = new Text("Notes");
+
+				// Position
+				notesTitle.setX(55);
+				notesTitle.setY(45);
+				notesTitle.setFill(Color.rgb(31, 41, 55));
+
+				// Style using inline CSS
+				notesTitle.setStyle(
+				    "-fx-fill: white;" +
+				    "-fx-font-size: 22px;" +
+				    "-fx-font-weight: 700;" +
+				    "-fx-font-family: 'Inter', 'Sans-serif';" +
+				    "-fx-background-color:transparent;"
+				);
+
+		return notesTitle;
+	}
+	
+	public Line CreateLine() 
+	{
+		//Navigation and Main Content Division Line
+				Line NavLine = new Line();
+				NavLine.setStartX(180);
+				NavLine.setStartY(0);
+				NavLine.setEndX(180);
+				NavLine.setEndY(500);
+				NavLine.setStrokeWidth(0.5);
+				NavLine.setStroke(Color.rgb(156, 163, 175));
+				
+		return NavLine;
+	}
+	
+	public Group CreateSearchBox() {
+
+	    Group searchGroup = new Group();
+
+	    // Background container
+	    Rectangle bg = new Rectangle();
+	    bg.setX(200);      // start after sidebar (NavLine is at 180)
+	    bg.setY(15);
+	    bg.setWidth(520);
+	    bg.setHeight(40);
+	    bg.setArcWidth(12);
+	    bg.setArcHeight(12);
+	    bg.setFill(Color.rgb(31, 41, 55)); // dark gray background
+
+	    // Search icon (Unicode)
+	    Text searchIcon = new Text("🔍");
+	    searchIcon.setX(215);
+	    searchIcon.setY(41);
+	    searchIcon.setStyle(
+	        "-fx-fill: rgb(156, 163, 175);" +
+	        "-fx-font-size: 14px;"
+	    );
+
+	    // TextField
+	    TextField searchField = new TextField();
+	    searchField.setLayoutX(240);
+	    searchField.setLayoutY(18);
+	    searchField.setPrefWidth(460);
+	    searchField.setPrefHeight(34);
+	    searchField.setPromptText("Search notes...");
+
+	    searchField.setStyle(
+	        "-fx-background-color: transparent;" +
+	        "-fx-text-fill: white;" +
+	        "-fx-prompt-text-fill: rgb(156, 163, 175);" +
+	        "-fx-font-size: 14px;" +
+	        "-fx-font-family: 'Inter', 'Sans-serif';" +
+	        "-fx-border-color: transparent;" +
+	        "-fx-focus-color: transparent;" +
+	        "-fx-faint-focus-color: transparent;"
+	    );
+
+	    searchGroup.getChildren().addAll(bg, searchIcon, searchField);
+	    return searchGroup;
+	}
+
 }
+
+
