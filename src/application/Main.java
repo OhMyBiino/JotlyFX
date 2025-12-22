@@ -9,16 +9,22 @@ import application.model.Note;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.stage.Stage;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
@@ -80,7 +86,65 @@ public class Main extends Application {
 		            "Milk, Bread, Eggs, Cheese, Apples, Bananas, Coffee.",
 		            "Edited 3 days ago"
 		 ));
+		 
+		 notes.add(new Note(
+		            4,
+		            "Grocery List",
+		            "Milk, Bread, Eggs, Cheese, Apples, Bananas, Coffee.",
+		            "Edited 2 days ago"
+		 ));
+		 
+		 notes.add(new Note(
+		            5,
+		            "Grocery List",
+		            "Milk, Bread, Eggs, Cheese, Apples, Bananas, Coffee.",
+		            "Edited 3 days ago"
+		 ));
+		 
+		 notes.add(new Note(
+		            6,
+		            "Grocery List",
+		            "Milk, Bread, Eggs, Cheese, Apples, Bananas, Coffee.",
+		            "Edited 2 days ago"
+		 ));
+		 
+		 notes.add(new Note(
+		            7,
+		            "Grocery List",
+		            "Milk, Bread, Eggs, Cheese, Apples, Bananas, Coffee.",
+		            "Edited 2 days ago"
+		 ));
 
+		 notes.add(new Note(
+		            8,
+		            "Grocery List",
+		            "Milk, Bread, Eggs, Cheese, Apples, Bananas, Coffee.",
+		            "Edited 2 days ago"
+		 ));
+		 
+//		 notes.add(new Note(
+//		            9,
+//		            "Grocery List",
+//		            "Milk, Bread, Eggs, Cheese, Apples, Bananas, Coffee.",
+//		            "Edited 2 days ago"
+//		 ));
+//		 
+//		 
+//		 notes.add(new Note(
+//		            10,
+//		            "Grocery List",
+//		            "Milk, Bread, Eggs, Cheese, Apples, Bananas, Coffee.",
+//		            "Edited 2 days ago"
+//		 ));
+//		 
+//		 
+//		 notes.add(new Note(
+//		            11,
+//		            "Grocery List",
+//		            "Milk, Bread, Eggs, Cheese, Apples, Bananas, Coffee.",
+//		            "Edited 2 days ago"
+//		 ));
+		 
 		double startY = 70;
 
 		for (Note note : notes) {
@@ -93,10 +157,47 @@ public class Main extends Application {
 		//Mock Notes (SideBar)
 		double y = 70;
 
+//		Commented Since I refactored the CreateSideBarNote() to adapt Scrollable Feature
+//		for (Note note : notes) {
+//		    root.getChildren().add(CreateSidebarNote(note, y));
+//		    y += 45;
+//		}
+		
+		
+		//Add Scrollable effect on SideBar
+		ScrollPane sidebarScroll = new ScrollPane();
+		sidebarScroll.setLayoutX(0);
+		sidebarScroll.setLayoutY(60);
+		sidebarScroll.setPrefWidth(180);
+		sidebarScroll.setPrefHeight(390);
+
+		sidebarScroll.setFitToWidth(true);
+		sidebarScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		sidebarScroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+
+		sidebarScroll.setStyle(
+		    "-fx-background: transparent;" +
+		    "-fx-background-color: transparent;"
+		);
+
+		
+		//Vbox for Notes
+		VBox notesList = new VBox();
+		notesList.setSpacing(4);
+		notesList.setPadding(new Insets(5));
+
+		notesList.setStyle(
+		    "-fx-background-color: transparent;"
+		);
+		
 		for (Note note : notes) {
-		    root.getChildren().add(CreateSidebarNote(note, y));
-		    y += 45;
+		    notesList.getChildren().add(CreateSidebarNote(note));
 		}
+
+
+		//Connect Vbox to ScrollPane
+		sidebarScroll.setContent(notesList);
+		root.getChildren().add(sidebarScroll);
 
 		
 		root.getChildren().add(NavLine);
@@ -354,54 +455,97 @@ public class Main extends Application {
 	    return btn;
 	}
 	
-	public Group CreateSidebarNote(Note note, double y) {
+//	public Group CreateSidebarNote(Note note, double y) {
+//
+//	    Group item = new Group();
+//
+//	    Rectangle bg = new Rectangle(0, y, 180, 40);
+//	    bg.setFill(Color.TRANSPARENT);
+//
+//	    Text title = new Text(note.getTitle());
+//	    title.setX(15);
+//	    title.setY(y + 25);
+//	    title.setStyle(
+//	        "-fx-fill: white;" +
+//	        "-fx-font-size: 13px;" +
+//	        "-fx-font-weight: 500;"
+//	    );
+//
+//	    Button viewBtn = new Button("View");
+//	    viewBtn.setLayoutX(120);
+//	    viewBtn.setLayoutY(y + 8);
+//	    viewBtn.setOpacity(0);
+//
+//	    viewBtn.setStyle(
+//	        "-fx-background-color: rgb(43,140,238);" +
+//	        "-fx-text-fill: white;" +
+//	        "-fx-font-size: 11px;" +
+//	        "-fx-background-radius: 6;" +
+//	        "-fx-cursor: hand;"
+//	    );
+//
+//	    // Hover behavior
+//	    item.setOnMouseEntered(e -> {
+//	        bg.setFill(Color.rgb(43, 140, 238, 0.15));
+//	        viewBtn.setOpacity(1);
+//	    });
+//
+//	    item.setOnMouseExited(e -> {
+//	        bg.setFill(Color.TRANSPARENT);
+//	        viewBtn.setOpacity(0);
+//	    });
+//
+//	    // Placeholder click
+//	    viewBtn.setOnAction(e ->
+//	        System.out.println("Viewing note: " + note.getTitle())
+//	    );
+//
+//	    item.getChildren().addAll(bg, title, viewBtn);
+//	    return item;
+//	}
+	public HBox CreateSidebarNote(Note note) {
 
-	    Group item = new Group();
-
-	    Rectangle bg = new Rectangle(0, y, 180, 40);
-	    bg.setFill(Color.TRANSPARENT);
+	    HBox item = new HBox();
+	    item.setPrefHeight(40);
+	    item.setAlignment(Pos.CENTER_LEFT);
+	    item.setSpacing(10);
+	    item.setPadding(new Insets(0, 8, 0, 10));
 
 	    Text title = new Text(note.getTitle());
-	    title.setX(15);
-	    title.setY(y + 25);
 	    title.setStyle(
 	        "-fx-fill: white;" +
 	        "-fx-font-size: 13px;" +
 	        "-fx-font-weight: 500;"
 	    );
 
+	    Region spacer = new Region();
+	    HBox.setHgrow(spacer, Priority.ALWAYS);
+
 	    Button viewBtn = new Button("View");
-	    viewBtn.setLayoutX(120);
-	    viewBtn.setLayoutY(y + 8);
 	    viewBtn.setOpacity(0);
 
 	    viewBtn.setStyle(
 	        "-fx-background-color: rgb(43,140,238);" +
 	        "-fx-text-fill: white;" +
 	        "-fx-font-size: 11px;" +
-	        "-fx-background-radius: 6;" +
-	        "-fx-cursor: hand;"
+	        "-fx-background-radius: 6;"
 	    );
 
-	    // Hover behavior
+	    // Hover effects
 	    item.setOnMouseEntered(e -> {
-	        bg.setFill(Color.rgb(43, 140, 238, 0.15));
+	        item.setStyle("-fx-background-color: rgba(43,140,238,0.15);");
 	        viewBtn.setOpacity(1);
 	    });
 
 	    item.setOnMouseExited(e -> {
-	        bg.setFill(Color.TRANSPARENT);
+	        item.setStyle("-fx-background-color: transparent;");
 	        viewBtn.setOpacity(0);
 	    });
 
-	    // Placeholder click
-	    viewBtn.setOnAction(e ->
-	        System.out.println("Viewing note: " + note.getTitle())
-	    );
-
-	    item.getChildren().addAll(bg, title, viewBtn);
+	    item.getChildren().addAll(title, spacer, viewBtn);
 	    return item;
 	}
+
 
 
 }
