@@ -4,6 +4,7 @@ package application;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import application.model.Note;
 import javafx.application.Application;
@@ -40,7 +41,9 @@ import javafx.scene.text.Text;
 public class Main extends Application {
     
 	//Primary Color: 43, 140, 238
-	
+	private List<Note> notes;
+	private VBox mainNotesList;
+
     
  public static void main(String[] args) {
         launch(args);
@@ -72,11 +75,11 @@ public class Main extends Application {
 		
 		Text notesTitle = this.CreateHeaderText();
 		
-		Group SearchGroup = this.CreateSearchBox();
+		Group SearchGroup = this.CreateSearchBox(stage);
 		
 //		NoteRepository repo = new NoteRepository();
 //		List<Note> notes = repo.getAllNotes();
-		List<Note> notes = new ArrayList<Note>();
+		notes = new ArrayList<Note>();
 		notes.add(new Note(1,
 	            "Meeting Notes Q3",
 	            "Key takeaways from the quarterly planning session and next action items.",
@@ -173,6 +176,11 @@ public class Main extends Application {
 //		    y += 45;
 //		}
 		
+//		 mainNotesList = new VBox(10);
+//		 mainNotesList.setPadding(new Insets(10));
+
+		 
+
 		
 		//Add Scrollable effect on SideBar
 		ScrollPane sidebarScroll = new ScrollPane();
@@ -228,13 +236,15 @@ public class Main extends Application {
 		
 		
 		//Main Notes Vbox
-		VBox mainNotesList = new VBox();
+		mainNotesList = new VBox();
 		mainNotesList.setSpacing(10);
 		mainNotesList.setPadding(new Insets(10));
 		
 		for (Note note : notes) {
 		    mainNotesList.getChildren().add(CreateMainNoteItem(note,stage));
 		}
+		
+		refreshMainNotes(notes,stage);
 
 		mainScroll.setContent(mainNotesList);
 		root.getChildren().add(mainScroll);
@@ -336,7 +346,7 @@ public class Main extends Application {
 		return NavLine;
 	}
 	
-	public Group CreateSearchBox() {
+	public Group CreateSearchBox(Stage stage) {
 
 	    Group searchGroup = new Group();
 
@@ -377,6 +387,20 @@ public class Main extends Application {
 	        "-fx-focus-color: transparent;" +
 	        "-fx-faint-focus-color: transparent;"
 	    );
+	    
+	    searchField.textProperty().addListener((obs, oldVal, newVal) -> {
+	        String query = newVal.toLowerCase().trim();
+
+	        List<Note> filtered = notes.stream()
+	            .filter(note ->
+	                note.getTitle().toLowerCase().contains(query) ||
+	                note.getContent().toLowerCase().contains(query)
+	            )
+	            .collect(Collectors.toList());
+
+	        refreshMainNotes(filtered,stage);
+	    });
+
 
 	    searchGroup.getChildren().addAll(bg, searchIcon, searchField);
 	    return searchGroup;
@@ -657,6 +681,13 @@ public class Main extends Application {
 	    );
 	}
 
+	private void refreshMainNotes(List<Note> notes, Stage stage) {
+	    mainNotesList.getChildren().clear();
+
+	    for (Note note : notes) {
+	        mainNotesList.getChildren().add(CreateMainNoteItem(note, stage));
+	    }
+	}
 
 
 }
