@@ -122,28 +122,28 @@ public class Main extends Application {
 		            "Edited 2 days ago"
 		 ));
 		 
-//		 notes.add(new Note(
-//		            9,
-//		            "Grocery List",
-//		            "Milk, Bread, Eggs, Cheese, Apples, Bananas, Coffee.",
-//		            "Edited 2 days ago"
-//		 ));
-//		 
-//		 
-//		 notes.add(new Note(
-//		            10,
-//		            "Grocery List",
-//		            "Milk, Bread, Eggs, Cheese, Apples, Bananas, Coffee.",
-//		            "Edited 2 days ago"
-//		 ));
-//		 
-//		 
-//		 notes.add(new Note(
-//		            11,
-//		            "Grocery List",
-//		            "Milk, Bread, Eggs, Cheese, Apples, Bananas, Coffee.",
-//		            "Edited 2 days ago"
-//		 ));
+		 notes.add(new Note(
+		            9,
+		            "Grocery List",
+		            "Milk, Bread, Eggs, Cheese, Apples, Bananas, Coffee.",
+		            "Edited 2 days ago"
+		 ));
+		 
+		 
+		 notes.add(new Note(
+		            10,
+		            "Grocery List",
+		            "Milk, Bread, Eggs, Cheese, Apples, Bananas, Coffee.",
+		            "Edited 2 days ago"
+		 ));
+		 
+		 
+		 notes.add(new Note(
+		            11,
+		            "Grocery List",
+		            "Milk, Bread, Eggs, Cheese, Apples, Bananas, Coffee.",
+		            "Edited 2 days ago"
+		 ));
 		 
 		double startY = 70;
 
@@ -421,8 +421,12 @@ public class Main extends Application {
 	private Button createActionBtn(String text, String color) {
 
 	    Button btn = new Button(text);
-
+	    
 	    btn.setPrefHeight(28);
+//	    btn.setPrefWidth(40);       // ✅ FIXED WIDTH
+//	    btn.setMinWidth(40);        // ✅ PREVENT SHRINK
+//	    btn.setMaxWidth(40);
+
 	    btn.setStyle(
 	        "-fx-background-color: " + color + ";" +
 	        "-fx-text-fill: white;" +
@@ -455,54 +459,7 @@ public class Main extends Application {
 	    return btn;
 	}
 	
-//	public Group CreateSidebarNote(Note note, double y) {
-//
-//	    Group item = new Group();
-//
-//	    Rectangle bg = new Rectangle(0, y, 180, 40);
-//	    bg.setFill(Color.TRANSPARENT);
-//
-//	    Text title = new Text(note.getTitle());
-//	    title.setX(15);
-//	    title.setY(y + 25);
-//	    title.setStyle(
-//	        "-fx-fill: white;" +
-//	        "-fx-font-size: 13px;" +
-//	        "-fx-font-weight: 500;"
-//	    );
-//
-//	    Button viewBtn = new Button("View");
-//	    viewBtn.setLayoutX(120);
-//	    viewBtn.setLayoutY(y + 8);
-//	    viewBtn.setOpacity(0);
-//
-//	    viewBtn.setStyle(
-//	        "-fx-background-color: rgb(43,140,238);" +
-//	        "-fx-text-fill: white;" +
-//	        "-fx-font-size: 11px;" +
-//	        "-fx-background-radius: 6;" +
-//	        "-fx-cursor: hand;"
-//	    );
-//
-//	    // Hover behavior
-//	    item.setOnMouseEntered(e -> {
-//	        bg.setFill(Color.rgb(43, 140, 238, 0.15));
-//	        viewBtn.setOpacity(1);
-//	    });
-//
-//	    item.setOnMouseExited(e -> {
-//	        bg.setFill(Color.TRANSPARENT);
-//	        viewBtn.setOpacity(0);
-//	    });
-//
-//	    // Placeholder click
-//	    viewBtn.setOnAction(e ->
-//	        System.out.println("Viewing note: " + note.getTitle())
-//	    );
-//
-//	    item.getChildren().addAll(bg, title, viewBtn);
-//	    return item;
-//	}
+
 	public HBox CreateSidebarNote(Note note) {
 
 	    HBox item = new HBox();
@@ -512,10 +469,11 @@ public class Main extends Application {
 	    item.setPadding(new Insets(0, 8, 0, 10));
 
 	    Text title = new Text(note.getTitle());
+	    title.setWrappingWidth(90);   // ✅ prevents overflow
 	    title.setStyle(
 	        "-fx-fill: white;" +
 	        "-fx-font-size: 13px;" +
-	        "-fx-font-weight: 500;"
+	        "-fx-font-weight: 700;"
 	    );
 
 	    Region spacer = new Region();
@@ -545,8 +503,6 @@ public class Main extends Application {
 	    item.getChildren().addAll(title, spacer, viewBtn);
 	    return item;
 	}
-
-
 
 }
 
