@@ -11,12 +11,17 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Control;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
@@ -59,6 +64,11 @@ public class Main extends Application {
 		Line NavLine = this.CreateLine();
 		
 		Button addNoteBtn = this.CreateButton();
+		
+		// Click action
+		addNoteBtn.setOnAction(e ->
+			showNoteModal(stage, "Add", null)	
+		);
 		
 		Text notesTitle = this.CreateHeaderText();
 		
@@ -192,7 +202,7 @@ public class Main extends Application {
 		
 		//SideBar Notes
 		for (Note note : notes) {
-		    notesList.getChildren().add(CreateSidebarNote(note));
+		    notesList.getChildren().add(CreateSidebarNote(note,stage));
 		}
 		
 		//Connect Vbox to ScrollPane
@@ -223,7 +233,7 @@ public class Main extends Application {
 		mainNotesList.setPadding(new Insets(10));
 		
 		for (Note note : notes) {
-		    mainNotesList.getChildren().add(CreateMainNoteItem(note));
+		    mainNotesList.getChildren().add(CreateMainNoteItem(note,stage));
 		}
 
 		mainScroll.setContent(mainNotesList);
@@ -286,10 +296,6 @@ public class Main extends Application {
 		    )
 		);
 
-		// Click action
-		addNoteBtn.setOnAction(e ->
-		    System.out.println("Add New Note clicked")
-		);
 		
 		return addNoteBtn;
 	}
@@ -376,79 +382,7 @@ public class Main extends Application {
 	    return searchGroup;
 	}
 	
-//	public Group CreateNoteItem(Note note, double y) {
-//
-//	    Group item = new Group();
-//
-//	    // Background
-//	    Rectangle bg = new Rectangle(200, y, 520, 72);
-//	    bg.setArcWidth(12);
-//	    bg.setArcHeight(12);
-//	    bg.setFill(Color.rgb(16, 25, 34));
-//	    bg.setStroke(Color.rgb(43, 140, 238));
-//	    bg.setStrokeWidth(0);
-//
-//	    Text title = new Text(note.getTitle());
-//	    title.setX(215);
-//	    title.setY(y + 28);
-//	    title.setStyle(
-//	        "-fx-fill: white;" +
-//	        "-fx-font-size: 15px;" +
-//	        "-fx-font-weight: 700;"
-//	    );
-//
-//	    Text preview = new Text(note.getContent());
-//	    preview.setX(215);
-//	    preview.setY(y + 48);
-//	    preview.setStyle(
-//	        "-fx-fill: rgb(156,163,175);" +
-//	        "-fx-font-size: 12px;"
-//	    );
-//	    
-//	    // Edited
-//	    Text edited = new Text(note.getLastEdited());
-//	    edited.setX(215);
-//	    edited.setY(y + 64);
-//	    edited.setStyle(
-//	        "-fx-fill: rgb(107,114,128);" +
-//	        "-fx-font-size: 10px;"
-//	    );
-//	    
-//	    // Hover Buttons Container
-//	    HBox actions = new HBox(8);
-//	    actions.setLayoutX(550);
-//	    actions.setLayoutY(y + 22);
-//	    actions.setOpacity(0); // hidden by default
-//
-//	    Button viewBtn = createActionBtn("View", "rgb(59,130,246)");
-//	    Button editBtn = createActionBtn("Edit", "rgb(34,197,94)");
-//	    Button deleteBtn = createActionBtn("Delete", "rgb(239,68,68)");
-//
-//	    // Placeholder actions
-//	    viewBtn.setOnAction(e -> System.out.println("View " + note.getId()));
-//	    editBtn.setOnAction(e -> System.out.println("Edit " + note.getId()));
-//	    deleteBtn.setOnAction(e -> System.out.println("Delete " + note.getId()));
-//
-//	    actions.getChildren().addAll(viewBtn, editBtn, deleteBtn);
-//
-//	    // Hover Effects
-//	    item.setOnMouseEntered(e -> {
-//	        actions.setOpacity(1);
-//	        bg.setStrokeWidth(1);
-//	        item.setCursor(Cursor.HAND);
-//	    });
-//
-//	    item.setOnMouseExited(e -> {
-//	        actions.setOpacity(0);
-//	        bg.setStrokeWidth(0);
-//	        item.setCursor(Cursor.DEFAULT);
-//	    });
-//
-//	    item.getChildren().addAll(bg, title, preview, edited, actions);
-//	    return item;
-//	}
-	
-	public VBox CreateMainNoteItem(Note note) {
+	public VBox CreateMainNoteItem(Note note, Stage stage) {
 
 	    VBox card = new VBox(6);
 	    card.setPadding(new Insets(12));
@@ -457,21 +391,6 @@ public class Main extends Application {
 	        "-fx-background-radius: 12;"
 	    );
 
-//	    card.setOnMouseEntered(e ->
-//	        card.setStyle(
-//	            "-fx-background-color: rgb(16,25,34);" +
-//	            "-fx-background-radius: 12;" +
-//	            "-fx-border-color: rgb(43,140,238);" +
-//	            "-fx-border-radius: 12;"
-//	        )
-//	    );
-//
-//	    card.setOnMouseExited(e ->
-//	        card.setStyle(
-//	            "-fx-background-color: rgb(16,25,34);" +
-//	            "-fx-background-radius: 12;"
-//	        )
-//	    );
 
 	    // Header Row
 	    HBox header = new HBox();
@@ -491,7 +410,16 @@ public class Main extends Application {
 	    actions.setOpacity(0);
 
 	    Button view = createActionBtn("View", "rgb(59,130,246)");
+	    view.setOnAction(e ->
+	    	showNoteModal(stage, "View", note)
+	    );
+	    
 	    Button edit = createActionBtn("Edit", "rgb(34,197,94)");
+	    edit.setOnAction(e ->
+	    	showNoteModal(stage, "Edit", note)
+	    );
+
+	    
 	    Button del  = createActionBtn("Delete", "rgb(239,68,68)");
 
 	    actions.getChildren().addAll(view, edit, del);
@@ -533,17 +461,12 @@ public class Main extends Application {
 	    card.getChildren().addAll(header, preview, edited);
 	    return card;
 	}
-
-
-
+	
 	private Button createActionBtn(String text, String color) {
 
 	    Button btn = new Button(text);
 	    
 	    btn.setPrefHeight(28);
-//	    btn.setPrefWidth(40);       // ✅ FIXED WIDTH
-//	    btn.setMinWidth(40);        // ✅ PREVENT SHRINK
-//	    btn.setMaxWidth(40);
 
 	    btn.setStyle(
 	        "-fx-background-color: " + color + ";" +
@@ -577,8 +500,7 @@ public class Main extends Application {
 	    return btn;
 	}
 	
-
-	public HBox CreateSidebarNote(Note note) {
+	public HBox CreateSidebarNote(Note note,Stage stage) {
 
 	    HBox item = new HBox();
 	    item.setPrefHeight(40);
@@ -599,6 +521,10 @@ public class Main extends Application {
 
 	    Button viewBtn = new Button("View");
 	    viewBtn.setOpacity(0);
+	    
+	    viewBtn.setOnAction(e ->
+    		showNoteModal(stage, "View", note)
+	    );
 
 	    viewBtn.setStyle(
 	        "-fx-background-color: rgb(43,140,238);" +
@@ -623,7 +549,115 @@ public class Main extends Application {
 	}
 	
 	
-	
+	private void showNoteModal(Stage owner, String mode, Note note) {
+
+	    Stage modal = new Stage();
+	    modal.initOwner(owner);
+	    modal.initModality(Modality.APPLICATION_MODAL);
+	    modal.initStyle(StageStyle.TRANSPARENT);
+
+	    StackPane overlay = new StackPane();
+	    overlay.setStyle(
+	        "-fx-background-color: rgba(0,0,0,0.65);"
+	    );
+
+	    VBox card = new VBox(14);
+	    card.setPadding(new Insets(20));
+	    card.setPrefWidth(480);
+	    card.setStyle(
+	        "-fx-background-color: linear-gradient(to bottom right, rgb(17,24,39), rgb(15,23,42));" +
+	        "-fx-background-radius: 14;"
+	    );
+
+	    // ---------- HEADER ----------
+	    Text title = new Text(mode + " Note");
+	    title.setStyle(
+	        "-fx-fill: white;" +
+	        "-fx-font-size: 20px;" +
+	        "-fx-font-weight: 800;"
+	    );
+
+	    // ---------- TITLE FIELD ----------
+	    Label titleLabel = new Label("Title");
+	    titleLabel.setStyle("-fx-text-fill: rgb(156,163,175);");
+
+	    TextField titleField = new TextField();
+	    titleField.setText(note != null ? note.getTitle() : "");
+	    styleInput(titleField);
+
+	    // ---------- CONTENT ----------
+	    Label contentLabel = new Label("Content");
+	    contentLabel.setStyle("-fx-text-fill: rgb(156,163,175);");
+
+	    TextArea contentArea = new TextArea();
+	    contentArea.setText(note != null ? note.getContent() : "");
+	    contentArea.setPrefHeight(180);
+	    contentArea.setWrapText(true);
+	    contentArea.setPrefRowCount(6);
+	    contentArea.setMinHeight(120);
+	    contentArea.setMaxHeight(300); // optional limit	    
+	    styleInput(contentArea);
+
+	    // ---------- BUTTONS ----------
+	    HBox actions = new HBox(10);
+	    actions.setAlignment(Pos.CENTER_RIGHT);
+
+	    Button cancel = new Button("Cancel");
+	    cancel.setStyle(
+	        "-fx-background-color: transparent;" +
+	        "-fx-border-color: rgb(75,85,99);" +
+	        "-fx-text-fill: white;" +
+	        "-fx-background-radius: 8;" +
+	        "-fx-border-radius: 8;" +
+	        "-fx-padding: 6 16;"
+	    );
+
+	    Button save = new Button("Save");
+	    save.setStyle(
+	        "-fx-background-color: rgb(59,130,246);" +
+	        "-fx-text-fill: white;" +
+	        "-fx-background-radius: 8;" +
+	        "-fx-padding: 6 16;"
+	    );
+
+	    cancel.setOnAction(e -> modal.close());
+	    save.setOnAction(e -> {
+	        System.out.println("Saved!");
+	        modal.close();
+	    });
+
+	    actions.getChildren().addAll(cancel, save);
+
+	    card.getChildren().addAll(
+	        title,
+	        titleLabel, titleField,
+	        contentLabel, contentArea,
+	        actions
+	    );
+
+	    overlay.getChildren().add(card);
+
+	    Scene scene = new Scene(overlay);
+	    scene.setFill(Color.TRANSPARENT);
+
+	    modal.setScene(scene);
+	    modal.showAndWait();
+	}
+
+	private void styleInput(Control input) {
+	    input.setStyle(
+	        "-fx-control-inner-background: rgb(30,41,59);" +  // 👈 IMPORTANT
+	        "-fx-background-color: rgb(30,41,59);" +
+	        "-fx-text-fill: white;" +
+	        "-fx-prompt-text-fill: rgb(107,114,128);" +
+	        "-fx-background-radius: 8;" +
+	        "-fx-border-color: rgb(55,65,81);" +
+	        "-fx-border-radius: 8;" +
+	        "-fx-padding: 8;"
+	    );
+	}
+
+
 
 }
 
