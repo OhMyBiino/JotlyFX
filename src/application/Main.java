@@ -10,12 +10,14 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.stage.Stage;
+import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -47,19 +49,6 @@ public class Main extends Application {
 		//Set Jotly's Logo
 		Image jotlyImage = new Image("Jotly_Logo.png");
 		stage.getIcons().add(jotlyImage);
-		
-//		//Sample Text
-//		Text text = new Text();
-//		text.setText("Buddongg");
-//		text.setX(450/2 - 5);
-//		text.setY(450/2 - 3);
-////		text.setFill(Color.WHITE);
-////		text.setFont(Font.font("Sans-serif",50));
-//		text.setStyle(
-//				"-fx-fill:white;"
-//				+ "-fx-font-weight:700;"
-//				+ "-fx-font-size:20px;"
-//				+ "-fx-font-family: 'Inter';");
 		
 		Line NavLine = this.CreateLine();
 		
@@ -101,9 +90,16 @@ public class Main extends Application {
 		}
 
 		
-//		root.getChildren().add(text);
+		//Mock Notes (SideBar)
+		double y = 70;
+
+		for (Note note : notes) {
+		    root.getChildren().add(CreateSidebarNote(note, y));
+		    y += 45;
+		}
+
+		
 		root.getChildren().add(NavLine);
-//		root.getChildren().add(SearchBarLine);
 		root.getChildren().add(addNoteBtn);
 		root.getChildren().add(notesTitle);
 		root.getChildren().add(SearchGroup);
@@ -252,10 +248,13 @@ public class Main extends Application {
 
 	    Group item = new Group();
 
-	    Rectangle bg = new Rectangle(200, y, 520, 70);
+	    // Background
+	    Rectangle bg = new Rectangle(200, y, 520, 72);
 	    bg.setArcWidth(12);
 	    bg.setArcHeight(12);
 	    bg.setFill(Color.rgb(16, 25, 34));
+	    bg.setStroke(Color.rgb(43, 140, 238));
+	    bg.setStrokeWidth(0);
 
 	    Text title = new Text(note.getTitle());
 	    title.setX(215);
@@ -273,8 +272,134 @@ public class Main extends Application {
 	        "-fx-fill: rgb(156,163,175);" +
 	        "-fx-font-size: 12px;"
 	    );
+	    
+	    // Edited
+	    Text edited = new Text(note.getLastEdited());
+	    edited.setX(215);
+	    edited.setY(y + 64);
+	    edited.setStyle(
+	        "-fx-fill: rgb(107,114,128);" +
+	        "-fx-font-size: 10px;"
+	    );
+	    
+	    // Hover Buttons Container
+	    HBox actions = new HBox(8);
+	    actions.setLayoutX(550);
+	    actions.setLayoutY(y + 22);
+	    actions.setOpacity(0); // hidden by default
 
-	    item.getChildren().addAll(bg, title, preview);
+	    Button viewBtn = createActionBtn("View", "rgb(59,130,246)");
+	    Button editBtn = createActionBtn("Edit", "rgb(34,197,94)");
+	    Button deleteBtn = createActionBtn("Delete", "rgb(239,68,68)");
+
+	    // Placeholder actions
+	    viewBtn.setOnAction(e -> System.out.println("View " + note.getId()));
+	    editBtn.setOnAction(e -> System.out.println("Edit " + note.getId()));
+	    deleteBtn.setOnAction(e -> System.out.println("Delete " + note.getId()));
+
+	    actions.getChildren().addAll(viewBtn, editBtn, deleteBtn);
+
+	    // Hover Effects
+	    item.setOnMouseEntered(e -> {
+	        actions.setOpacity(1);
+	        bg.setStrokeWidth(1);
+	        item.setCursor(Cursor.HAND);
+	    });
+
+	    item.setOnMouseExited(e -> {
+	        actions.setOpacity(0);
+	        bg.setStrokeWidth(0);
+	        item.setCursor(Cursor.DEFAULT);
+	    });
+
+	    item.getChildren().addAll(bg, title, preview, edited, actions);
+	    return item;
+	}
+
+
+	private Button createActionBtn(String text, String color) {
+
+	    Button btn = new Button(text);
+
+	    btn.setPrefHeight(28);
+	    btn.setStyle(
+	        "-fx-background-color: " + color + ";" +
+	        "-fx-text-fill: white;" +
+	        "-fx-font-size: 11px;" +
+	        "-fx-font-weight: 600;" +
+	        "-fx-background-radius: 6;" +
+	        "-fx-cursor: hand;"
+	    );
+
+	    btn.setOnMouseEntered(e ->
+	        btn.setStyle(
+	            "-fx-background-color: derive(" + color + ", -15%);" +
+	            "-fx-text-fill: white;" +
+	            "-fx-font-size: 11px;" +
+	            "-fx-font-weight: 700;" +
+	            "-fx-background-radius: 6;"
+	        )
+	    );
+
+	    btn.setOnMouseExited(e ->
+	        btn.setStyle(
+	            "-fx-background-color: " + color + ";" +
+	            "-fx-text-fill: white;" +
+	            "-fx-font-size: 11px;" +
+	            "-fx-font-weight: 600;" +
+	            "-fx-background-radius: 6;"
+	        )
+	    );
+
+	    return btn;
+	}
+	
+	public Group CreateSidebarNote(Note note, double y) {
+
+	    Group item = new Group();
+
+	    Rectangle bg = new Rectangle(0, y, 180, 40);
+	    bg.setFill(Color.TRANSPARENT);
+
+	    Text title = new Text(note.getTitle());
+	    title.setX(15);
+	    title.setY(y + 25);
+	    title.setStyle(
+	        "-fx-fill: white;" +
+	        "-fx-font-size: 13px;" +
+	        "-fx-font-weight: 500;"
+	    );
+
+	    Button viewBtn = new Button("View");
+	    viewBtn.setLayoutX(120);
+	    viewBtn.setLayoutY(y + 8);
+	    viewBtn.setOpacity(0);
+
+	    viewBtn.setStyle(
+	        "-fx-background-color: rgb(43,140,238);" +
+	        "-fx-text-fill: white;" +
+	        "-fx-font-size: 11px;" +
+	        "-fx-background-radius: 6;" +
+	        "-fx-cursor: hand;"
+	    );
+
+	    // Hover behavior
+	    item.setOnMouseEntered(e -> {
+	        bg.setFill(Color.rgb(43, 140, 238, 0.15));
+	        viewBtn.setOpacity(1);
+	    });
+
+	    item.setOnMouseExited(e -> {
+	        bg.setFill(Color.TRANSPARENT);
+	        viewBtn.setOpacity(0);
+	    });
+
+	    // Placeholder click
+	    viewBtn.setOnAction(e ->
+	        System.out.println("Viewing note: " + note.getTitle())
+	    );
+
+	    item.getChildren().addAll(bg, title, viewBtn);
 	    return item;
 	}
 
