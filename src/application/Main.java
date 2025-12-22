@@ -145,17 +145,17 @@ public class Main extends Application {
 		            "Edited 2 days ago"
 		 ));
 		 
-		double startY = 70;
-
-		for (Note note : notes) {
-		    Group noteUI = CreateNoteItem(note, startY);
-		    root.getChildren().add(noteUI);
-		    startY += 80;
-		}
-
-		
-		//Mock Notes (SideBar)
-		double y = 70;
+//		double startY = 70;
+//
+//		for (Note note : notes) {
+//		    Group noteUI = CreateNoteItem(note, startY);
+//		    root.getChildren().add(noteUI);
+//		    startY += 80;
+//		}
+//
+//		
+//		//Mock Notes (SideBar)
+//		double y = 70;
 
 //		Commented Since I refactored the CreateSideBarNote() to adapt Scrollable Feature
 //		for (Note note : notes) {
@@ -190,16 +190,47 @@ public class Main extends Application {
 		    "-fx-background-color: transparent;"
 		);
 		
+		//SideBar Notes
 		for (Note note : notes) {
 		    notesList.getChildren().add(CreateSidebarNote(note));
 		}
-
-
+		
 		//Connect Vbox to ScrollPane
 		sidebarScroll.setContent(notesList);
 		root.getChildren().add(sidebarScroll);
+		
+		
+		//Main Scroll 
+		ScrollPane mainScroll = new ScrollPane();
+		mainScroll.setLayoutX(180);
+		mainScroll.setLayoutY(60);
+		mainScroll.setPrefWidth(570);
+		mainScroll.setPrefHeight(440);
+
+		mainScroll.setFitToWidth(true);
+		mainScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		mainScroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+
+		mainScroll.setStyle(
+		    "-fx-background: transparent;" +
+		    "-fx-background-color: transparent;"
+		);
+		
+		
+		//Main Notes Vbox
+		VBox mainNotesList = new VBox();
+		mainNotesList.setSpacing(10);
+		mainNotesList.setPadding(new Insets(10));
+		
+		for (Note note : notes) {
+		    mainNotesList.getChildren().add(CreateMainNoteItem(note));
+		}
+
+		mainScroll.setContent(mainNotesList);
+		root.getChildren().add(mainScroll);
 
 		
+
 		root.getChildren().add(NavLine);
 		root.getChildren().add(addNoteBtn);
 		root.getChildren().add(notesTitle);
@@ -345,77 +376,164 @@ public class Main extends Application {
 	    return searchGroup;
 	}
 	
-	public Group CreateNoteItem(Note note, double y) {
+//	public Group CreateNoteItem(Note note, double y) {
+//
+//	    Group item = new Group();
+//
+//	    // Background
+//	    Rectangle bg = new Rectangle(200, y, 520, 72);
+//	    bg.setArcWidth(12);
+//	    bg.setArcHeight(12);
+//	    bg.setFill(Color.rgb(16, 25, 34));
+//	    bg.setStroke(Color.rgb(43, 140, 238));
+//	    bg.setStrokeWidth(0);
+//
+//	    Text title = new Text(note.getTitle());
+//	    title.setX(215);
+//	    title.setY(y + 28);
+//	    title.setStyle(
+//	        "-fx-fill: white;" +
+//	        "-fx-font-size: 15px;" +
+//	        "-fx-font-weight: 700;"
+//	    );
+//
+//	    Text preview = new Text(note.getContent());
+//	    preview.setX(215);
+//	    preview.setY(y + 48);
+//	    preview.setStyle(
+//	        "-fx-fill: rgb(156,163,175);" +
+//	        "-fx-font-size: 12px;"
+//	    );
+//	    
+//	    // Edited
+//	    Text edited = new Text(note.getLastEdited());
+//	    edited.setX(215);
+//	    edited.setY(y + 64);
+//	    edited.setStyle(
+//	        "-fx-fill: rgb(107,114,128);" +
+//	        "-fx-font-size: 10px;"
+//	    );
+//	    
+//	    // Hover Buttons Container
+//	    HBox actions = new HBox(8);
+//	    actions.setLayoutX(550);
+//	    actions.setLayoutY(y + 22);
+//	    actions.setOpacity(0); // hidden by default
+//
+//	    Button viewBtn = createActionBtn("View", "rgb(59,130,246)");
+//	    Button editBtn = createActionBtn("Edit", "rgb(34,197,94)");
+//	    Button deleteBtn = createActionBtn("Delete", "rgb(239,68,68)");
+//
+//	    // Placeholder actions
+//	    viewBtn.setOnAction(e -> System.out.println("View " + note.getId()));
+//	    editBtn.setOnAction(e -> System.out.println("Edit " + note.getId()));
+//	    deleteBtn.setOnAction(e -> System.out.println("Delete " + note.getId()));
+//
+//	    actions.getChildren().addAll(viewBtn, editBtn, deleteBtn);
+//
+//	    // Hover Effects
+//	    item.setOnMouseEntered(e -> {
+//	        actions.setOpacity(1);
+//	        bg.setStrokeWidth(1);
+//	        item.setCursor(Cursor.HAND);
+//	    });
+//
+//	    item.setOnMouseExited(e -> {
+//	        actions.setOpacity(0);
+//	        bg.setStrokeWidth(0);
+//	        item.setCursor(Cursor.DEFAULT);
+//	    });
+//
+//	    item.getChildren().addAll(bg, title, preview, edited, actions);
+//	    return item;
+//	}
+	
+	public VBox CreateMainNoteItem(Note note) {
 
-	    Group item = new Group();
+	    VBox card = new VBox(6);
+	    card.setPadding(new Insets(12));
+	    card.setStyle(
+	        "-fx-background-color: rgb(16,25,34);" +
+	        "-fx-background-radius: 12;"
+	    );
 
-	    // Background
-	    Rectangle bg = new Rectangle(200, y, 520, 72);
-	    bg.setArcWidth(12);
-	    bg.setArcHeight(12);
-	    bg.setFill(Color.rgb(16, 25, 34));
-	    bg.setStroke(Color.rgb(43, 140, 238));
-	    bg.setStrokeWidth(0);
+//	    card.setOnMouseEntered(e ->
+//	        card.setStyle(
+//	            "-fx-background-color: rgb(16,25,34);" +
+//	            "-fx-background-radius: 12;" +
+//	            "-fx-border-color: rgb(43,140,238);" +
+//	            "-fx-border-radius: 12;"
+//	        )
+//	    );
+//
+//	    card.setOnMouseExited(e ->
+//	        card.setStyle(
+//	            "-fx-background-color: rgb(16,25,34);" +
+//	            "-fx-background-radius: 12;"
+//	        )
+//	    );
+
+	    // Header Row
+	    HBox header = new HBox();
+	    header.setAlignment(Pos.CENTER_LEFT);
 
 	    Text title = new Text(note.getTitle());
-	    title.setX(215);
-	    title.setY(y + 28);
 	    title.setStyle(
 	        "-fx-fill: white;" +
 	        "-fx-font-size: 15px;" +
 	        "-fx-font-weight: 700;"
 	    );
 
+	    Region spacer = new Region();
+	    HBox.setHgrow(spacer, Priority.ALWAYS);
+
+	    HBox actions = new HBox(8);
+	    actions.setOpacity(0);
+
+	    Button view = createActionBtn("View", "rgb(59,130,246)");
+	    Button edit = createActionBtn("Edit", "rgb(34,197,94)");
+	    Button del  = createActionBtn("Delete", "rgb(239,68,68)");
+
+	    actions.getChildren().addAll(view, edit, del);
+
+	    // Hover buttons
+	    card.setOnMouseEntered(e -> {
+	    	 card.setStyle(
+	 	            "-fx-background-color: rgb(16,25,34);" +
+	 	            "-fx-background-radius: 12;" +
+	 	            "-fx-border-color: rgb(43,140,238);" +
+	 	            "-fx-border-radius: 12;"
+	 	        );
+	    	actions.setOpacity(1);
+	    });
+	    card.setOnMouseExited(e -> {
+	    	card.setStyle(
+	            "-fx-background-color: rgb(16,25,34);" +
+	            "-fx-background-radius: 12;"
+	        );
+	    	actions.setOpacity(0);
+	    });
+
+	    header.getChildren().addAll(title, spacer, actions);
+
+	    // Content
 	    Text preview = new Text(note.getContent());
-	    preview.setX(215);
-	    preview.setY(y + 48);
+	    preview.setWrappingWidth(520);
 	    preview.setStyle(
 	        "-fx-fill: rgb(156,163,175);" +
 	        "-fx-font-size: 12px;"
 	    );
-	    
-	    // Edited
+
 	    Text edited = new Text(note.getLastEdited());
-	    edited.setX(215);
-	    edited.setY(y + 64);
 	    edited.setStyle(
 	        "-fx-fill: rgb(107,114,128);" +
 	        "-fx-font-size: 10px;"
 	    );
-	    
-	    // Hover Buttons Container
-	    HBox actions = new HBox(8);
-	    actions.setLayoutX(550);
-	    actions.setLayoutY(y + 22);
-	    actions.setOpacity(0); // hidden by default
 
-	    Button viewBtn = createActionBtn("View", "rgb(59,130,246)");
-	    Button editBtn = createActionBtn("Edit", "rgb(34,197,94)");
-	    Button deleteBtn = createActionBtn("Delete", "rgb(239,68,68)");
-
-	    // Placeholder actions
-	    viewBtn.setOnAction(e -> System.out.println("View " + note.getId()));
-	    editBtn.setOnAction(e -> System.out.println("Edit " + note.getId()));
-	    deleteBtn.setOnAction(e -> System.out.println("Delete " + note.getId()));
-
-	    actions.getChildren().addAll(viewBtn, editBtn, deleteBtn);
-
-	    // Hover Effects
-	    item.setOnMouseEntered(e -> {
-	        actions.setOpacity(1);
-	        bg.setStrokeWidth(1);
-	        item.setCursor(Cursor.HAND);
-	    });
-
-	    item.setOnMouseExited(e -> {
-	        actions.setOpacity(0);
-	        bg.setStrokeWidth(0);
-	        item.setCursor(Cursor.DEFAULT);
-	    });
-
-	    item.getChildren().addAll(bg, title, preview, edited, actions);
-	    return item;
+	    card.getChildren().addAll(header, preview, edited);
+	    return card;
 	}
+
 
 
 	private Button createActionBtn(String text, String color) {
@@ -503,6 +621,9 @@ public class Main extends Application {
 	    item.getChildren().addAll(title, spacer, viewBtn);
 	    return item;
 	}
+	
+	
+	
 
 }
 
