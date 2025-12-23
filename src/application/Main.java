@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import application.model.Note;
+import application.repository.NoteRepository;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -79,108 +80,91 @@ public class Main extends Application {
 		
 //		NoteRepository repo = new NoteRepository();
 //		List<Note> notes = repo.getAllNotes();
-		notes = new ArrayList<Note>();
-		notes.add(new Note(1,
-	            "Meeting Notes Q3",
-	            "Key takeaways from the quarterly planning session and next action items.",
-	            "Edited 2 hours ago"
-	    ));
-		
-		 notes.add(new Note(
-		            2,
-		            "Project Phoenix Ideas",
-		            "Initial brainstorming for the new marketing campaign and target audience analysis.",
-		            "Edited yesterday"
-		));
-		 
-		 notes.add(new Note(
-		            3,
-		            "Grocery List",
-		            "Milk, Bread, Eggs, Cheese, Apples, Bananas, Coffee.",
-		            "Edited 3 days ago"
-		 ));
-		 
-		 notes.add(new Note(
-		            4,
-		            "Grocery List",
-		            "Milk, Bread, Eggs, Cheese, Apples, Bananas, Coffee.",
-		            "Edited 2 days ago"
-		 ));
-		 
-		 notes.add(new Note(
-		            5,
-		            "Grocery List",
-		            "Milk, Bread, Eggs, Cheese, Apples, Bananas, Coffee.",
-		            "Edited 3 days ago"
-		 ));
-		 
-		 notes.add(new Note(
-		            6,
-		            "Grocery List",
-		            "Milk, Bread, Eggs, Cheese, Apples, Bananas, Coffee.",
-		            "Edited 2 days ago"
-		 ));
-		 
-		 notes.add(new Note(
-		            7,
-		            "Grocery List",
-		            "Milk, Bread, Eggs, Cheese, Apples, Bananas, Coffee.",
-		            "Edited 2 days ago"
-		 ));
-
-		 notes.add(new Note(
-		            8,
-		            "Grocery List",
-		            "Milk, Bread, Eggs, Cheese, Apples, Bananas, Coffee.",
-		            "Edited 2 days ago"
-		 ));
-		 
-		 notes.add(new Note(
-		            9,
-		            "Grocery List",
-		            "Milk, Bread, Eggs, Cheese, Apples, Bananas, Coffee.",
-		            "Edited 2 days ago"
-		 ));
-		 
-		 
-		 notes.add(new Note(
-		            10,
-		            "Grocery List",
-		            "Milk, Bread, Eggs, Cheese, Apples, Bananas, Coffee.",
-		            "Edited 2 days ago"
-		 ));
-		 
-		 
-		 notes.add(new Note(
-		            11,
-		            "Grocery List",
-		            "Milk, Bread, Eggs, Cheese, Apples, Bananas, Coffee.",
-		            "Edited 2 days ago"
-		 ));
-		 
-//		double startY = 70;
-//
-//		for (Note note : notes) {
-//		    Group noteUI = CreateNoteItem(note, startY);
-//		    root.getChildren().add(noteUI);
-//		    startY += 80;
-//		}
-//
+//		notes = new ArrayList<Note>();
+//		notes.add(new Note(1,
+//	            "Meeting Notes Q3",
+//	            "Key takeaways from the quarterly planning session and next action items.",
+//	            "Edited 2 hours ago"
+//	    ));
 //		
-//		//Mock Notes (SideBar)
-//		double y = 70;
-
-//		Commented Since I refactored the CreateSideBarNote() to adapt Scrollable Feature
-//		for (Note note : notes) {
-//		    root.getChildren().add(CreateSidebarNote(note, y));
-//		    y += 45;
-//		}
-		
-//		 mainNotesList = new VBox(10);
-//		 mainNotesList.setPadding(new Insets(10));
-
+//		 notes.add(new Note(
+//		            2,
+//		            "Project Phoenix Ideas",
+//		            "Initial brainstorming for the new marketing campaign and target audience analysis.",
+//		            "Edited yesterday"
+//		));
+//		 
+//		 notes.add(new Note(
+//		            3,
+//		            "Grocery List",
+//		            "Milk, Bread, Eggs, Cheese, Apples, Bananas, Coffee.",
+//		            "Edited 3 days ago"
+//		 ));
+//		 
+//		 notes.add(new Note(
+//		            4,
+//		            "Grocery List",
+//		            "Milk, Bread, Eggs, Cheese, Apples, Bananas, Coffee.",
+//		            "Edited 2 days ago"
+//		 ));
+//		 
+//		 notes.add(new Note(
+//		            5,
+//		            "Grocery List",
+//		            "Milk, Bread, Eggs, Cheese, Apples, Bananas, Coffee.",
+//		            "Edited 3 days ago"
+//		 ));
+//		 
+//		 notes.add(new Note(
+//		            6,
+//		            "Grocery List",
+//		            "Milk, Bread, Eggs, Cheese, Apples, Bananas, Coffee.",
+//		            "Edited 2 days ago"
+//		 ));
+//		 
+//		 notes.add(new Note(
+//		            7,
+//		            "Grocery List",
+//		            "Milk, Bread, Eggs, Cheese, Apples, Bananas, Coffee.",
+//		            "Edited 2 days ago"
+//		 ));
+//
+//		 notes.add(new Note(
+//		            8,
+//		            "Grocery List",
+//		            "Milk, Bread, Eggs, Cheese, Apples, Bananas, Coffee.",
+//		            "Edited 2 days ago"
+//		 ));
+//		 
+//		 notes.add(new Note(
+//		            9,
+//		            "Grocery List",
+//		            "Milk, Bread, Eggs, Cheese, Apples, Bananas, Coffee.",
+//		            "Edited 2 days ago"
+//		 ));
+//		 
+//		 
+//		 notes.add(new Note(
+//		            10,
+//		            "Grocery List",
+//		            "Milk, Bread, Eggs, Cheese, Apples, Bananas, Coffee.",
+//		            "Edited 2 days ago"
+//		 ));
+//		 
+//		 
+//		 notes.add(new Note(
+//		            11,
+//		            "Grocery List",
+//		            "Milk, Bread, Eggs, Cheese, Apples, Bananas, Coffee.",
+//		            "Edited 2 days ago"
+//		 ));
 		 
+		NoteRepository repo = new NoteRepository();
+		notes = repo.getAllNotes();
 
+//		refreshMainNotes(notes, stage);
+
+		
 		
 		//Add Scrollable effect on SideBar
 		ScrollPane sidebarScroll = new ScrollPane();
@@ -571,8 +555,7 @@ public class Main extends Application {
 	    item.getChildren().addAll(title, spacer, viewBtn);
 	    return item;
 	}
-	
-	
+
 	private void showNoteModal(Stage owner, String mode, Note note) {
 
 	    Stage modal = new Stage();
@@ -646,9 +629,26 @@ public class Main extends Application {
 
 	    cancel.setOnAction(e -> modal.close());
 	    save.setOnAction(e -> {
-	        System.out.println("Saved!");
+
+	        NoteRepository repo = new NoteRepository();
+
+	        if (mode.equals("Add")) {
+	            repo.insert(
+	                new Note(
+	                    0,
+	                    titleField.getText(),
+	                    contentArea.getText(),
+	                    "Just now"
+	                )
+	            );
+	        }
+
+	        notes = repo.getAllNotes();
+	        refreshMainNotes(notes, owner);
+
 	        modal.close();
 	    });
+
 
 	    actions.getChildren().addAll(cancel, save);
 
