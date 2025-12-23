@@ -44,6 +44,7 @@ public class Main extends Application {
 	//Primary Color: 43, 140, 238
 	private List<Note> notes;
 	private VBox mainNotesList;
+	private VBox sidebarNotesList;
 
     
  public static void main(String[] args) {
@@ -184,21 +185,23 @@ public class Main extends Application {
 
 		
 		//Vbox for Notes
-		VBox notesList = new VBox();
-		notesList.setSpacing(4);
-		notesList.setPadding(new Insets(5));
+		sidebarNotesList = new VBox();
+		sidebarNotesList.setSpacing(4);
+		sidebarNotesList.setPadding(new Insets(5));
+		sidebarNotesList.setStyle("-fx-background-color: transparent;");
 
-		notesList.setStyle(
+
+		sidebarNotesList.setStyle(
 		    "-fx-background-color: transparent;"
 		);
 		
 		//SideBar Notes
 		for (Note note : notes) {
-		    notesList.getChildren().add(CreateSidebarNote(note,stage));
+			sidebarNotesList.getChildren().add(CreateSidebarNote(note,stage));
 		}
 		
 		//Connect Vbox to ScrollPane
-		sidebarScroll.setContent(notesList);
+		sidebarScroll.setContent(sidebarNotesList);
 		root.getChildren().add(sidebarScroll);
 		
 		
@@ -228,7 +231,7 @@ public class Main extends Application {
 		    mainNotesList.getChildren().add(CreateMainNoteItem(note,stage));
 		}
 		
-		refreshMainNotes(notes,stage);
+		refreshAllNotes(notes,stage);
 
 		mainScroll.setContent(mainNotesList);
 		root.getChildren().add(mainScroll);
@@ -382,7 +385,7 @@ public class Main extends Application {
 	            )
 	            .collect(Collectors.toList());
 
-	        refreshMainNotes(filtered,stage);
+	        refreshAllNotes(filtered,stage);
 	    });
 
 
@@ -683,7 +686,7 @@ public class Main extends Application {
 	        }
 
 	        notes = repo.getAllNotes();
-	        refreshMainNotes(notes, owner);
+	        refreshAllNotes(notes, owner);
 
 	        modal.close();
 	    });
@@ -720,14 +723,14 @@ public class Main extends Application {
 	        "-fx-padding: 8;"
 	    );
 	}
-
-	private void refreshMainNotes(List<Note> notes, Stage stage) {
-	    mainNotesList.getChildren().clear();
-
-	    for (Note note : notes) {
-	        mainNotesList.getChildren().add(CreateMainNoteItem(note, stage));
-	    }
-	}
+//
+//	private void refreshMainNotes(List<Note> notes, Stage stage) {
+//	    mainNotesList.getChildren().clear();
+//
+//	    for (Note note : notes) {
+//	        mainNotesList.getChildren().add(CreateMainNoteItem(note, stage));
+//	    }
+//	}
 
 
 	private void showDeleteConfirm(Stage owner, Note note) {
@@ -785,7 +788,7 @@ public class Main extends Application {
 	        repo.delete(note.getId());
 
 	        notes = repo.getAllNotes();
-	        refreshMainNotes(notes, owner);
+	        refreshAllNotes(notes, owner);
 
 	        modal.close();
 	    });
@@ -799,6 +802,22 @@ public class Main extends Application {
 
 	    modal.setScene(scene);
 	    modal.showAndWait();
+	}
+
+	
+	private void refreshAllNotes(List<Note> notes, Stage stage) {
+
+	    // Main panel
+	    mainNotesList.getChildren().clear();
+	    for (Note note : notes) {
+	        mainNotesList.getChildren().add(CreateMainNoteItem(note, stage));
+	    }
+
+	    // Sidebar
+	    sidebarNotesList.getChildren().clear();
+	    for (Note note : notes) {
+	        sidebarNotesList.getChildren().add(CreateSidebarNote(note, stage));
+	    }
 	}
 
 }
