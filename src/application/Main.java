@@ -634,27 +634,7 @@ public class Main extends Application {
 	    );
 
 	    cancel.setOnAction(e -> modal.close());
-//	    save.setOnAction(e -> {
-//
-//	        NoteRepository repo = new NoteRepository();
-//
-//	        if (mode.equals("Add")) {
-//	            repo.insert(
-//	                new Note(
-//	                    0,
-//	                    titleField.getText(),
-//	                    contentArea.getText(),
-//	                    "Just now"
-//	                )
-//	            );
-//	        }
-//
-//	        notes = repo.getAllNotes();
-//	        refreshMainNotes(notes, owner);
-//
-//	        modal.close();
-//	    });
-	    
+
 	    save.setOnAction(e -> {
 
 	        if (titleField.getText().isBlank() || contentArea.getText().isBlank()) {
@@ -723,15 +703,6 @@ public class Main extends Application {
 	        "-fx-padding: 8;"
 	    );
 	}
-//
-//	private void refreshMainNotes(List<Note> notes, Stage stage) {
-//	    mainNotesList.getChildren().clear();
-//
-//	    for (Note note : notes) {
-//	        mainNotesList.getChildren().add(CreateMainNoteItem(note, stage));
-//	    }
-//	}
-
 
 	private void showDeleteConfirm(Stage owner, Note note) {
 
@@ -804,7 +775,6 @@ public class Main extends Application {
 	    modal.showAndWait();
 	}
 
-	
 	private void refreshAllNotes(List<Note> notes, Stage stage) {
 
 	    // Main panel
