@@ -429,6 +429,9 @@ public class Main extends Application {
 
 	    
 	    Button del  = createActionBtn("Delete", "rgb(239,68,68)");
+	    del.setOnAction(e -> {
+	        showDeleteConfirm(stage, note);
+	    });
 
 	    actions.getChildren().addAll(view, edit, del);
 
@@ -628,7 +631,32 @@ public class Main extends Application {
 	    );
 
 	    cancel.setOnAction(e -> modal.close());
+//	    save.setOnAction(e -> {
+//
+//	        NoteRepository repo = new NoteRepository();
+//
+//	        if (mode.equals("Add")) {
+//	            repo.insert(
+//	                new Note(
+//	                    0,
+//	                    titleField.getText(),
+//	                    contentArea.getText(),
+//	                    "Just now"
+//	                )
+//	            );
+//	        }
+//
+//	        notes = repo.getAllNotes();
+//	        refreshMainNotes(notes, owner);
+//
+//	        modal.close();
+//	    });
+	    
 	    save.setOnAction(e -> {
+
+	        if (titleField.getText().isBlank() || contentArea.getText().isBlank()) {
+	            return;
+	        }
 
 	        NoteRepository repo = new NoteRepository();
 
@@ -643,11 +671,23 @@ public class Main extends Application {
 	            );
 	        }
 
+	        if (mode.equals("Edit")) {
+	            repo.update(
+	                new Note(
+	                    note.getId(),                  // 👈 KEEP SAME ID
+	                    titleField.getText(),
+	                    contentArea.getText(),
+	                    note.getLastEdited()
+	                )
+	            );
+	        }
+
 	        notes = repo.getAllNotes();
 	        refreshMainNotes(notes, owner);
 
 	        modal.close();
 	    });
+
 
 
 	    actions.getChildren().addAll(cancel, save);
@@ -689,6 +729,77 @@ public class Main extends Application {
 	    }
 	}
 
+
+	private void showDeleteConfirm(Stage owner, Note note) {
+
+	    Stage modal = new Stage();
+	    modal.initOwner(owner);
+	    modal.initModality(Modality.APPLICATION_MODAL);
+	    modal.initStyle(StageStyle.TRANSPARENT);
+
+	    StackPane overlay = new StackPane();
+	    overlay.setStyle("-fx-background-color: rgba(0,0,0,0.6);");
+
+	    VBox card = new VBox(15);
+	    card.setPadding(new Insets(20));
+	    card.setPrefWidth(380);
+	    card.setStyle(
+	        "-fx-background-color: rgb(17,24,39);" +
+	        "-fx-background-radius: 12;"
+	    );
+
+	    Text title = new Text("Delete Note?");
+	    title.setStyle(
+	        "-fx-fill: white;" +
+	        "-fx-font-size: 18px;" +
+	        "-fx-font-weight: 800;"
+	    );
+
+	    Text msg = new Text("This action cannot be undone.");
+	    msg.setStyle("-fx-fill: rgb(156,163,175);");
+
+	    HBox actions = new HBox(10);
+	    actions.setAlignment(Pos.CENTER_RIGHT);
+
+	    Button cancel = new Button("Cancel");
+	    Button delete = new Button("Delete");
+
+	    cancel.setStyle(
+	        "-fx-background-color: transparent;" +
+	        "-fx-border-color: rgb(75,85,99);" +
+	        "-fx-text-fill: white;" +
+	        "-fx-background-radius: 8;" +
+	        "-fx-border-radius: 8;"
+	    );
+
+	    delete.setStyle(
+	        "-fx-background-color: rgb(239,68,68);" +
+	        "-fx-text-fill: white;" +
+	        "-fx-background-radius: 8;"
+	    );
+
+	    cancel.setOnAction(e -> modal.close());
+
+	    delete.setOnAction(e -> {
+	        NoteRepository repo = new NoteRepository();
+	        repo.delete(note.getId());
+
+	        notes = repo.getAllNotes();
+	        refreshMainNotes(notes, owner);
+
+	        modal.close();
+	    });
+
+	    actions.getChildren().addAll(cancel, delete);
+	    card.getChildren().addAll(title, msg, actions);
+	    overlay.getChildren().add(card);
+
+	    Scene scene = new Scene(overlay);
+	    scene.setFill(Color.TRANSPARENT);
+
+	    modal.setScene(scene);
+	    modal.showAndWait();
+	}
 
 }
 
